@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 교육 3일 정리</title>
+<style>
+  :root{
+    --bg-0:#0a0b12;
+    --bg-1:#12131f;
+    --ink:#f3f4f8;
+    --ink-soft:#a9adbe;
+    --ink-dim:#71768c;
+    --line:rgba(255,255,255,.09);
+    --card:rgba(255,255,255,.045);
+    --card-hi:rgba(255,255,255,.08);
+    --accent:#6d7cff;
+    --accent-2:#b98bff;
+    --accent-3:#3fd0c9;
+    --radius:22px;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI","Pretendard","Apple SD Gothic Neo",
+      "Noto Sans KR",Roboto,Helvetica,Arial,sans-serif;
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+
+  body{
+    font-family:var(--sans);
+    color:var(--ink);
+    background:
+      radial-gradient(1100px 700px at 12% -8%, rgba(109,124,255,.22), transparent 60%),
+      radial-gradient(1000px 720px at 92% 4%, rgba(185,139,255,.18), transparent 58%),
+      radial-gradient(900px 720px at 50% 118%, rgba(63,208,201,.14), transparent 60%),
+      linear-gradient(180deg,var(--bg-0),var(--bg-1));
+    background-attachment:fixed;
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+    line-height:1.6;
+    padding:clamp(20px,4vw,56px);
+  }
+
+  .wrap{max-width:1120px;margin:0 auto}
+
+  /* ---------- Hero ---------- */
+  .hero{
+    text-align:center;
+    padding:clamp(56px,9vw,120px) 20px clamp(40px,6vw,72px);
+    opacity:0;
+    animation:fadeUp .9s cubic-bezier(.2,.7,.2,1) forwards;
+  }
+  .eyebrow{
+    display:inline-block;
+    font-size:.78rem;
+    letter-spacing:.32em;
+    text-transform:uppercase;
+    color:var(--ink-soft);
+    padding:8px 16px;
+    border:1px solid var(--line);
+    border-radius:999px;
+    background:var(--card);
+    backdrop-filter:blur(12px);
+    -webkit-backdrop-filter:blur(12px);
+    margin-bottom:26px;
+  }
+  .hero h1{
+    font-size:clamp(2.6rem,7vw,5rem);
+    font-weight:800;
+    letter-spacing:-.03em;
+    line-height:1.05;
+    background:linear-gradient(120deg,#ffffff 20%,#c7ccff 55%,#e6d4ff 90%);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+  }
+  .hero p{
+    margin-top:20px;
+    font-size:clamp(1.05rem,2.3vw,1.4rem);
+    color:var(--ink-soft);
+    font-weight:400;
+    letter-spacing:-.01em;
+  }
+
+  /* ---------- Section head ---------- */
+  .section-head{
+    display:flex;
+    align-items:baseline;
+    gap:14px;
+    margin:8px 4px 26px;
+    opacity:0;
+    animation:fadeUp .8s ease forwards;
+    animation-delay:.15s;
+  }
+  .section-head h2{
+    font-size:1.05rem;
+    font-weight:700;
+    letter-spacing:-.01em;
+  }
+  .section-head span{
+    height:1px;flex:1;
+    background:linear-gradient(90deg,var(--line),transparent);
+  }
+
+  /* ---------- Cards ---------- */
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:clamp(18px,2.4vw,26px);
+  }
+
+  .card{
+    position:relative;
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    background:var(--card);
+    backdrop-filter:blur(20px) saturate(140%);
+    -webkit-backdrop-filter:blur(20px) saturate(140%);
+    padding:30px 28px 32px;
+    overflow:hidden;
+    box-shadow:0 1px 0 rgba(255,255,255,.05) inset, 0 24px 48px -30px rgba(0,0,0,.8);
+    opacity:0;
+    transform:translateY(26px);
+    animation:cardIn .8s cubic-bezier(.2,.7,.2,1) forwards;
+    transition:transform .45s cubic-bezier(.2,.7,.2,1),
+               box-shadow .45s ease,
+               border-color .45s ease,
+               background .45s ease;
+  }
+  .card:nth-child(1){animation-delay:.25s;--glow:var(--accent)}
+  .card:nth-child(2){animation-delay:.4s;--glow:var(--accent-2)}
+  .card:nth-child(3){animation-delay:.55s;--glow:var(--accent-3)}
+
+  .card::before{
+    content:"";
+    position:absolute;inset:0;
+    border-radius:inherit;
+    padding:1px;
+    background:linear-gradient(140deg,var(--glow),transparent 45%);
+    -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+    -webkit-mask-composite:xor;mask-composite:exclude;
+    opacity:0;
+    transition:opacity .45s ease;
+    pointer-events:none;
+  }
+
+  .card:hover{
+    transform:translateY(-10px) scale(1.025);
+    border-color:transparent;
+    background:var(--card-hi);
+    box-shadow:0 1px 0 rgba(255,255,255,.08) inset,
+               0 40px 80px -40px rgba(0,0,0,.9),
+               0 0 60px -18px var(--glow);
+  }
+  .card:hover::before{opacity:.9}
+
+  .card .day{
+    display:inline-flex;
+    align-items:center;
+    gap:9px;
+    font-size:.72rem;
+    letter-spacing:.2em;
+    text-transform:uppercase;
+    color:var(--ink-dim);
+    margin-bottom:6px;
+  }
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--glow);
+    box-shadow:0 0 12px 2px var(--glow)}
+  .card h3{
+    font-size:1.7rem;
+    font-weight:800;
+    letter-spacing:-.02em;
+    margin-bottom:20px;
+    background:linear-gradient(120deg,#fff,var(--glow));
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .card ul{list-style:none;display:flex;flex-direction:column;gap:13px}
+  .card li{
+    position:relative;
+    padding-left:26px;
+    font-size:.98rem;
+    color:var(--ink-soft);
+    letter-spacing:-.01em;
+  }
+  .card li::before{
+    content:"";
+    position:absolute;left:0;top:.62em;
+    width:11px;height:11px;border-radius:3px;
+    background:var(--glow);
+    opacity:.85;
+    transform:rotate(45deg);
+    box-shadow:0 0 10px -1px var(--glow);
+  }
+
+  /* ---------- Apply section ---------- */
+  .apply{
+    margin-top:clamp(40px,6vw,72px);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    background:var(--card);
+    backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);
+    padding:clamp(32px,4vw,48px);
+    opacity:0;
+    transform:translateY(26px);
+    animation:cardIn .8s cubic-bezier(.2,.7,.2,1) forwards;
+    animation-delay:.7s;
+  }
+  .apply h2{
+    font-size:1.5rem;
+    font-weight:800;
+    letter-spacing:-.02em;
+    margin-bottom:6px;
+  }
+  .apply .sub{color:var(--ink-dim);font-size:.92rem;margin-bottom:28px}
+  .memo{display:flex;flex-direction:column;gap:22px}
+  .memo-line{display:flex;align-items:center;gap:18px}
+  .memo-num{
+    flex:none;width:30px;height:30px;border-radius:9px;
+    display:grid;place-items:center;
+    font-size:.85rem;font-weight:700;color:var(--ink-soft);
+    border:1px solid var(--line);background:rgba(255,255,255,.03);
+  }
+  .memo-rule{
+    flex:1;height:44px;
+    border-bottom:1.5px dashed rgba(255,255,255,.16);
+    transition:border-color .3s ease;
+  }
+  .memo-line:hover .memo-rule{border-color:var(--accent)}
+
+  /* ---------- Footer ---------- */
+  footer{
+    margin-top:56px;text-align:center;
+    color:var(--ink-dim);font-size:.8rem;letter-spacing:.04em;
+    opacity:0;animation:fadeUp .8s ease forwards;animation-delay:.9s;
+  }
+
+  /* ---------- Animations ---------- */
+  @keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+  @keyframes cardIn{to{opacity:1;transform:none}}
+
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important}
+    .hero,.section-head,.card,.apply,footer{opacity:1;transform:none}
+  }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width:860px){
+    .grid{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+
+    <header class="hero">
+      <span class="eyebrow">Executive Summary</span>
+      <h1>AI 교육 3일 정리</h1>
+      <p>3일 동안 배운 것</p>
+    </header>
+
+    <div class="section-head">
+      <h2>학습 요약</h2>
+      <span></span>
+    </div>
+
+    <section class="grid">
+
+      <article class="card">
+        <div class="day"><i class="dot"></i>Day 1</div>
+        <h3>기초와 도구</h3>
+        <ul>
+          <li>프롬프트 4요소(역할·맥락·할 일·형식)</li>
+          <li>3대 AI 도구 비교</li>
+          <li>바이브 코딩</li>
+          <li>터미널과 MCP</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <div class="day"><i class="dot"></i>Day 2</div>
+        <h3>스킬과 에이전트</h3>
+        <ul>
+          <li>스킬로 형식 고정</li>
+          <li>에이전트 만들기</li>
+          <li>멀티 에이전트 검토</li>
+          <li>조율 규칙(CLAUDE.md)</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <div class="day"><i class="dot"></i>Day 3</div>
+        <h3>구축과 운영</h3>
+        <ul>
+          <li>에이전트 구축 순서</li>
+          <li>GitHub Pages 배포</li>
+          <li>디버깅</li>
+          <li>데스크탑에서 지속 관리</li>
+        </ul>
+      </article>
+
+    </section>
+
+    <section class="apply">
+      <h2>현업에 적용해볼 것</h2>
+      <p class="sub">배운 내용을 실제 업무에 연결할 아이디어를 적어보세요.</p>
+      <div class="memo">
+        <div class="memo-line"><span class="memo-num">1</span><span class="memo-rule"></span></div>
+        <div class="memo-line"><span class="memo-num">2</span><span class="memo-rule"></span></div>
+        <div class="memo-line"><span class="memo-num">3</span><span class="memo-rule"></span></div>
+      </div>
+    </section>
+
+    <footer>AI 교육 3일 정리 · Executive Dashboard</footer>
+
+  </div>
+</body>
+</html>
